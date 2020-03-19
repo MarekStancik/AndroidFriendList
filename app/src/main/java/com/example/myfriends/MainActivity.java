@@ -1,15 +1,26 @@
 package com.example.myfriends;
 
 import android.app.ListActivity;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ListAdapter;
 import android.widget.ListView;
+import android.widget.TextView;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 
 import com.example.myfriends.Model.BEFriend;
 import com.example.myfriends.Model.Friends;
+
+import java.util.ArrayList;
 
 public class MainActivity extends ListActivity {
 
@@ -19,27 +30,24 @@ public class MainActivity extends ListActivity {
 
     Friends m_friends;
 
+    private FriendsAdapter adapter;
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         this.setTitle("Friends v2");
         m_friends = new Friends();
-        setUpList();
+        refreshListView();
     }
 
-    private void setUpList(){
-        String[] friends;
+    private void refreshListView()
+    {
+        //Create new adapter
+        adapter = new FriendsAdapter(this,m_friends.getAll());
 
-        friends = m_friends.getNames();
-
-        ListAdapter adapter =
-                new ArrayAdapter<String>(this,
-                        android.R.layout.simple_list_item_1,
-                        friends);
-
+        //Set new adapter
         setListAdapter(adapter);
     }
-
 
     @Override
     public void onListItemClick(ListView parent, View v, int position,
@@ -65,13 +73,46 @@ public class MainActivity extends ListActivity {
                     int position = bundle.getInt("position");
                     BEFriend friend = (BEFriend) data.getSerializableExtra("friend");
                     m_friends.getAll().set(position,friend);
-                    setUpList();
+                    refreshListView();
                     break;
                 case RESULT_CANCELED:
                     break;
             }
         }
 
+    }
+
+    private class FriendsAdapter extends ArrayAdapter<BEFriend>{
+
+        private ArrayList<BEFriend> friends;
+
+        public FriendsAdapter(@NonNull Context context, @NonNull ArrayList<BEFriend> friends) {
+            super(context, 0, friends);
+            this.friends = friends;
+        }
+
+        @NonNull
+        @Override
+        public View getView(int position, @Nullable View view, @NonNull ViewGroup parent) {
+
+            if(view == null)
+            {
+                //Obtain inflater
+                LayoutInflater inflater = (LayoutInflater) getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+
+                view = inflater.inflate(R.layout.list_view_record,null);
+            }
+
+            BEFriend friend= friends.get(position);
+
+            TextView txtScore = view.findViewById(R.id.txtFriendName);
+            txtScore.setText(friend.getName());
+
+            ImageView iw = view.findViewById(R.id.imgFriend);
+            iw.setImageResource(R.drawable.froggy);
+
+            return view;
+        }
     }
 
 }
