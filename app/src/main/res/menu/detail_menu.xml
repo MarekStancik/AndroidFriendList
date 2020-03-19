@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/itMakeCall"
+        android:title="@string/makeCallText"/>
+
+    <item
+        android:id="@+id/itSendSms"
+        android:title="@string/sendSmsText"/>
+
+    <item
+        android:id="@+id/itSendEmail"
+        android:title="@string/sendEmailText"/>
+
+    <item
+        android:id="@+id/itOpenWebsite"
+        android:title="@string/openWebsiteText"/>
+</menu>
