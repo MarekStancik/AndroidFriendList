@@ -1,5 +1,9 @@
 package com.example.myfriends.Model;
 
+import android.graphics.Bitmap;
+
+import com.example.myfriends.SerializableBitmap;
+
 import java.io.Serializable;
 
 public class BEFriend implements Serializable {
@@ -7,8 +11,9 @@ public class BEFriend implements Serializable {
     public static class FriendBuilder{
         private BEFriend obj;
 
-        protected FriendBuilder(String name){
+        protected FriendBuilder(long id,String name){
             obj = new BEFriend(name,"",false);
+            obj.id = id;
         }
 
         public FriendBuilder withNumber(String phone){
@@ -26,18 +31,26 @@ public class BEFriend implements Serializable {
             return this;
         }
 
+        public FriendBuilder withPhoto(Bitmap photo){
+            if(photo != null)
+                obj.m_photo = new SerializableBitmap(photo);
+            return this;
+        }
+
         public BEFriend asFriend(boolean favourite){
             obj.m_isFavorite = favourite;
             return obj;
         }
     }
 
-    public static FriendBuilder create(String name) { return new FriendBuilder(name);}
+    public static FriendBuilder create(long id,String name) { return new FriendBuilder(id,name);}
 
+    private long id;
     private String m_name;
     private String m_phone;
     private String m_email;
     private String m_url;
+    private SerializableBitmap m_photo;
     private Boolean m_isFavorite;
 
     public BEFriend(String name, String phone) {
@@ -67,5 +80,12 @@ public class BEFriend implements Serializable {
 
     public String getUrl() { return m_url;}
 
+    public Bitmap getPhoto(){
+        return m_photo != null ? m_photo.getBitmap() : null;
+    }
+
+    public long getId() {
+        return id;
+    }
 }
 

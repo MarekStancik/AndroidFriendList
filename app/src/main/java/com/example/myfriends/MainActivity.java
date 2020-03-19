@@ -9,8 +9,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
-import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -21,6 +19,7 @@ import com.example.myfriends.Model.BEFriend;
 import com.example.myfriends.Model.Friends;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class MainActivity extends ListActivity {
 
@@ -28,24 +27,33 @@ public class MainActivity extends ListActivity {
 
     private static final int FRIEND_DETAIL = 123;
 
-    Friends m_friends;
+    ArrayList<BEFriend> friends;
 
     private FriendsAdapter adapter;
+    private IDataAccess<BEFriend> friendDao;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         this.setTitle("Friends v2");
-        m_friends = new Friends();
+        friendDao = DataAccessFactory.getInstance(this);
+        friends = friendDao.readAll();
+        if(friends.isEmpty())
+        {
+            Friends frnds = new Friends();
+            List<BEFriend> all = frnds.getAll();
+            for(BEFriend fr: all){
+                friendDao.create(fr);
+            }
+            friends = friendDao.readAll();
+        }
         refreshListView();
     }
 
     private void refreshListView()
     {
         //Create new adapter
-        adapter = new FriendsAdapter(this,m_friends.getAll());
-
-        //Set new adapter
+        adapter = new FriendsAdapter(this,friends);
         setListAdapter(adapter);
     }
 
@@ -54,7 +62,7 @@ public class MainActivity extends ListActivity {
                                 long id) {
 
         Intent x = new Intent(this, DetailActivity.class);
-        BEFriend friend = m_friends.getAll().get(position);
+        BEFriend friend = friends.get(position);
         x.putExtra("position",position);
         x.putExtra("friend",friend);
         startActivityForResult(x,FRIEND_DETAIL);
@@ -72,7 +80,8 @@ public class MainActivity extends ListActivity {
                     Bundle bundle = data.getExtras();
                     int position = bundle.getInt("position");
                     BEFriend friend = (BEFriend) data.getSerializableExtra("friend");
-                    m_friends.getAll().set(position,friend);
+                    friends.set(position,friend);
+                    friendDao.update(friend);
                     refreshListView();
                     break;
                 case RESULT_CANCELED:
@@ -109,7 +118,10 @@ public class MainActivity extends ListActivity {
             txtScore.setText(friend.getName());
 
             ImageView iw = view.findViewById(R.id.imgFriend);
-            iw.setImageResource(R.drawable.froggy);
+            if(friend.getPhoto() != null)
+                iw.setImageBitmap(friend.getPhoto());
+            else
+                iw.setImageResource(R.drawable.froggy);
 
             return view;
         }

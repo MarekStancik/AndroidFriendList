@@ -6,6 +6,7 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     tools:context=".DetailActivity">
+
     <TextView
         android:id="@+id/tvHeader"
         android:layout_width="wrap_content"
@@ -13,6 +14,11 @@
         android:text="Detail"
         android:layout_gravity="center"
         style="@style/Base.TextAppearance.AppCompat.Large"/>
+
+    <ImageView
+        android:layout_width="128dp"
+        android:layout_height="128dp"
+        android:id="@+id/imgFriendDetail"/>
 
     <TableLayout
         android:layout_width="fill_parent"
