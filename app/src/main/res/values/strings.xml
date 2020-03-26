@@ -4,4 +4,5 @@
     <string name="sendSmsText">Send SMS</string>
     <string name="sendEmailText">Send Email</string>
     <string name="openWebsiteText">Open URL</string>
+    <string name="addFriend">Add Friend</string>
 </resources>

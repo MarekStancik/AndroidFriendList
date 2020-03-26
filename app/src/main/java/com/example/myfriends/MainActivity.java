@@ -1,12 +1,15 @@
 package com.example.myfriends;
 
-import android.app.ListActivity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.ListView;
@@ -14,6 +17,7 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.myfriends.Model.BEFriend;
 import com.example.myfriends.Model.Friends;
@@ -21,7 +25,7 @@ import com.example.myfriends.Model.Friends;
 import java.util.ArrayList;
 import java.util.List;
 
-public class MainActivity extends ListActivity {
+public class MainActivity extends AppCompatActivity {
 
     public static String TAG = "Friend2";
 
@@ -29,15 +33,20 @@ public class MainActivity extends ListActivity {
 
     ArrayList<BEFriend> friends;
 
-    private FriendsAdapter adapter;
+    private ListView lvFriends;
     private IDataAccess<BEFriend> friendDao;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main);
         this.setTitle("Friends v2");
+
+        //Load friends from db
         friendDao = DataAccessFactory.getInstance(this);
         friends = friendDao.readAll();
+
+        //If db is empty, seed database
         if(friends.isEmpty())
         {
             Friends frnds = new Friends();
@@ -47,25 +56,24 @@ public class MainActivity extends ListActivity {
             }
             friends = friendDao.readAll();
         }
+
+        //Set up list view
+        lvFriends = findViewById(R.id.lvMain);
+        lvFriends.setOnItemClickListener((parent, view, position, id) -> {
+            Intent x = new Intent(this, DetailActivity.class);
+            BEFriend friend = friends.get(position);
+            x.putExtra("position",position);
+            x.putExtra("friend",friend);
+            startActivityForResult(x,FRIEND_DETAIL);
+        });
         refreshListView();
     }
 
     private void refreshListView()
     {
         //Create new adapter
-        adapter = new FriendsAdapter(this,friends);
-        setListAdapter(adapter);
-    }
-
-    @Override
-    public void onListItemClick(ListView parent, View v, int position,
-                                long id) {
-
-        Intent x = new Intent(this, DetailActivity.class);
-        BEFriend friend = friends.get(position);
-        x.putExtra("position",position);
-        x.putExtra("friend",friend);
-        startActivityForResult(x,FRIEND_DETAIL);
+        FriendsAdapter adapter = new FriendsAdapter(this,friends);
+        lvFriends.setAdapter(adapter);
     }
 
     @Override
@@ -124,6 +132,21 @@ public class MainActivity extends ListActivity {
                 iw.setImageResource(R.drawable.froggy);
 
             return view;
+        }
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.main_menu, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()){
+            default:
+                return super.onContextItemSelected(item);
         }
     }
 

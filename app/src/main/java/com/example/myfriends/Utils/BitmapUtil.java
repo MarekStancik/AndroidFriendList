@@ -1,4 +1,4 @@
-package com.example.myfriends;
+package com.example.myfriends.Utils;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;

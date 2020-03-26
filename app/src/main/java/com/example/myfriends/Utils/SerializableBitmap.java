@@ -1,7 +1,8 @@
-package com.example.myfriends;
+package com.example.myfriends.Utils;
 
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
+
+import com.example.myfriends.Utils.BitmapUtil;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;

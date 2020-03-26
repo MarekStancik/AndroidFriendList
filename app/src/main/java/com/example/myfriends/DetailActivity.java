@@ -20,10 +20,14 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
+import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageView;
 
 import com.example.myfriends.Model.BEFriend;
+import com.example.myfriends.Utils.DateConversion;
+
+import java.util.Date;
 
 
 public class DetailActivity extends AppCompatActivity {
@@ -36,6 +40,9 @@ public class DetailActivity extends AppCompatActivity {
     EditText etEmail;
     EditText etWebsite;
     EditText etPhone;
+    DatePicker dateBirthday;
+    EditText etAddress;
+    EditText etBirthday;
     CheckBox cbFavorite;
     Button btnOk,btnCancel;
     int friendPosition;
@@ -53,6 +60,9 @@ public class DetailActivity extends AppCompatActivity {
         cbFavorite = findViewById(R.id.cbFavorite);
         etEmail = findViewById(R.id.etEmail);
         etWebsite = findViewById(R.id.etWebsite);
+       // dateBirthday = findViewById(R.id.dateBirthday);
+        etAddress = findViewById(R.id.etAddress);
+        etBirthday = findViewById(R.id.etBirthday);
         img = findViewById(R.id.imgFriendDetail);
 
         setGUI();
@@ -135,7 +145,16 @@ public class DetailActivity extends AppCompatActivity {
         etPhone.setText(f.getPhone());
         etEmail.setText(f.getEmail());
         etWebsite.setText(f.getUrl());
+        etAddress.setText(f.getAddress());
         cbFavorite.setChecked(f.isFavorite());
+
+    /*    Date date = f.getBirthday();
+        dateBirthday.init(date.getYear(),date.getMonth(),date.getDay(),(DatePicker view, int year, int monthOfYear, int dayOfMonth) -> {
+            etBirthday.setText( "" + dayOfMonth + "-" + (monthOfYear + 1) + "-" + year );
+        });*/
+
+        etBirthday.setText(DateConversion.toString(f.getBirthday()));
+
         if(f.getPhoto() != null)
             img.setImageBitmap(f.getPhoto());
         else
@@ -148,7 +167,9 @@ public class DetailActivity extends AppCompatActivity {
         btnOk.setOnClickListener((View v)->{
             Intent data = new Intent();
             BEFriend newFriend = BEFriend.create(f.getId(),etName.getText().toString())
-                    .withNumber(etPhone.getText().toString())
+                    .birthAt(DateConversion.toDate(etBirthday.getText().toString()))
+                    .livesAt(etAddress.getText().toString())
+                    .withPhoneNumber(etPhone.getText().toString())
                     .withEmail(etEmail.getText().toString())
                     .withWebsite(etWebsite.getText().toString())
                     .withPhoto(((BitmapDrawable)img.getDrawable()).getBitmap())
@@ -159,6 +180,7 @@ public class DetailActivity extends AppCompatActivity {
             setResult(RESULT_OK,data);
             finish();
         });
+
 
         btnCancel.setOnClickListener((View v)->{
             setResult(RESULT_CANCELED);

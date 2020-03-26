@@ -2,9 +2,10 @@ package com.example.myfriends.Model;
 
 import android.graphics.Bitmap;
 
-import com.example.myfriends.SerializableBitmap;
+import com.example.myfriends.Utils.SerializableBitmap;
 
 import java.io.Serializable;
+import java.util.Date;
 
 public class BEFriend implements Serializable {
 
@@ -16,29 +17,39 @@ public class BEFriend implements Serializable {
             obj.id = id;
         }
 
-        public FriendBuilder withNumber(String phone){
-            obj.m_phone = phone;
+        public FriendBuilder withPhoneNumber(String phone){
+            obj.phone = phone;
+            return this;
+        }
+
+        public FriendBuilder birthAt(Date birthDate){
+            obj.birthday = birthDate;
+            return this;
+        }
+
+        public FriendBuilder livesAt(String address){
+            obj.address = address;
             return this;
         }
 
         public FriendBuilder withEmail(String email){
-            obj.m_email = email;
+            obj.email = email;
             return this;
         }
 
         public FriendBuilder withWebsite(String url){
-            obj.m_url = url;
+            obj.url = url;
             return this;
         }
 
         public FriendBuilder withPhoto(Bitmap photo){
             if(photo != null)
-                obj.m_photo = new SerializableBitmap(photo);
+                obj.photo = new SerializableBitmap(photo);
             return this;
         }
 
         public BEFriend asFriend(boolean favourite){
-            obj.m_isFavorite = favourite;
+            obj.isFavorite = favourite;
             return obj;
         }
     }
@@ -46,46 +57,59 @@ public class BEFriend implements Serializable {
     public static FriendBuilder create(long id,String name) { return new FriendBuilder(id,name);}
 
     private long id;
-    private String m_name;
-    private String m_phone;
-    private String m_email;
-    private String m_url;
-    private SerializableBitmap m_photo;
-    private Boolean m_isFavorite;
+    private String name;
+    private String phone;
+    private String email;
+    private String url;
+    private String address;
+    private String location;
+    private Date birthday;
+    private SerializableBitmap photo;
+    private Boolean isFavorite;
 
     public BEFriend(String name, String phone) {
         this(name, phone, false);
     }
 
     public BEFriend(String name, String phone, Boolean isFavorite) {
-        m_name = name;
-        m_phone = phone;
-        m_isFavorite = isFavorite;
-        m_email = "";
-        m_url = "";
+        this.name = name;
+        this.phone = phone;
+        this.isFavorite = isFavorite;
+        email = "";
+        url = "";
+        address = "";
+        birthday = new Date();
     }
 
     public String getPhone() {
-        return m_phone;
+        return phone;
     }
 
 
     public String getName() {
-        return m_name;
+        return name;
     }
 
-    public Boolean isFavorite() { return m_isFavorite; }
+    public Boolean isFavorite() { return isFavorite; }
 
-    public String getEmail() { return m_email; }
+    public String getEmail() { return email; }
 
-    public String getUrl() { return m_url;}
+    public String getUrl() { return url;}
 
     public Bitmap getPhoto(){
-        return m_photo != null ? m_photo.getBitmap() : null;
+        return photo != null ? photo.getBitmap() : null;
     }
 
     public long getId() {
         return id;
+    }
+
+    public Date getBirthday() {
+        return birthday;
+    }
+
+    public String getAddress() {
+        return address;
     }
 }
 
