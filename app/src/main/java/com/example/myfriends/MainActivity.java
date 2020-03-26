@@ -23,19 +23,25 @@ import com.example.myfriends.Model.BEFriend;
 import com.example.myfriends.Model.Friends;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
 
     public static String TAG = "Friend2";
 
+    //Request codes
     private static final int FRIEND_DETAIL = 123;
     private static final int FRIEND_DETAIL_ADD = 124;
 
+    //Friends collections
     ArrayList<BEFriend> friends;
-
     private ListView lvFriends;
     private IDataAccess<BEFriend> friendDao;
+
+    //Ordering
+    boolean orderAsc = true; //If true order asc else desc
+    boolean orderName = true; //If true order by name else location
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -73,6 +79,13 @@ public class MainActivity extends AppCompatActivity {
     private void refreshListView()
     {
         //Create new adapter
+        Collections.sort(friends,(o1, o2) -> {
+            if(orderName){
+                return orderAsc ? o1.getName().compareTo(o2.getName()): o2.getName().compareTo(o1.getName());
+            }
+            return o1.getAddress().compareTo(o2.getAddress());
+        });
+
         FriendsAdapter adapter = new FriendsAdapter(this,friends);
         lvFriends.setAdapter(adapter);
     }
@@ -160,6 +173,18 @@ public class MainActivity extends AppCompatActivity {
         switch (item.getItemId()){
             case R.id.itAddFriend:
                 addNewFriend();
+                return true;
+            case R.id.itOrderAscDesc:
+                orderAsc = !orderAsc;
+                refreshListView();
+                return true;
+            case R.id.itOrderLocation:
+                orderName = false;
+                refreshListView();
+                return true;
+            case R.id.itOrderName:
+                orderName = true;
+                refreshListView();
                 return true;
             default:
                 return super.onContextItemSelected(item);

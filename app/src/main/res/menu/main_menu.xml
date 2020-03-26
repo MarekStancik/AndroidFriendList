@@ -1,6 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
-    <item
-        android:id="@+id/itAddFriend"
-        android:title="@string/addFriend"/>
+    <group>
+        <item
+            android:title="Ordering">
+            <menu>
+                <item
+                    android:id="@+id/itOrderAscDesc"
+                    android:title="Asc/Desc"/>
+                <item
+                    android:id="@+id/itOrderName"
+                    android:title="@string/name"/>
+                <item
+                    android:id="@+id/itOrderLocation"
+                    android:title="@string/location"/>
+            </menu>
+        </item>
+    </group>
+    <group>
+        <item
+            android:id="@+id/itAddFriend"
+            android:title="@string/addFriend"/>
+    </group>
 </menu>
