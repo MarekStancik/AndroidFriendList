@@ -53,7 +53,6 @@ public class DetailActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_detail);
-        Log.d(TAG, "Detail Activity started");
 
         etName = findViewById(R.id.etName);
         etPhone = findViewById(R.id.etPhone);
@@ -136,9 +135,10 @@ public class DetailActivity extends AppCompatActivity {
         smsManager.sendTextMessage(etPhone.getText().toString(), null, text, null, null);
     }
 
-    private void setGUI()
+    //Set up gui with existing friend
+    private void setUpGUI(BEFriend friend)
     {
-        f = (BEFriend) getIntent().getSerializableExtra("friend");
+        f = friend;
         friendPosition = getIntent().getExtras().getInt("position");
 
         etName.setText(f.getName());
@@ -159,14 +159,29 @@ public class DetailActivity extends AppCompatActivity {
             img.setImageBitmap(f.getPhoto());
         else
             img.setImageResource(R.drawable.froggy);
+    }
+
+    //Set up gui for creating
+    private void setUpGUI()
+    {
+    }
+
+    private void setGUI()
+    {
+        //Just browse friend
+        if(getIntent().hasExtra("friend")){
+            setUpGUI((BEFriend) getIntent().getSerializableExtra("friend"));
+        }
+        else{ //Create new friend
+            setUpGUI();
+        }
 
         btnOk = findViewById(R.id.btnOk);
-
         btnCancel = findViewById(R.id.btnCancel);
 
         btnOk.setOnClickListener((View v)->{
             Intent data = new Intent();
-            BEFriend newFriend = BEFriend.create(f.getId(),etName.getText().toString())
+            BEFriend newFriend = BEFriend.create(f != null ? f.getId() : 0,etName.getText().toString())
                     .birthAt(DateConversion.toDate(etBirthday.getText().toString()))
                     .livesAt(etAddress.getText().toString())
                     .withPhoneNumber(etPhone.getText().toString())
@@ -181,12 +196,12 @@ public class DetailActivity extends AppCompatActivity {
             finish();
         });
 
-
         btnCancel.setOnClickListener((View v)->{
             setResult(RESULT_CANCELED);
             finish();
         });
 
+        //Set up camera on image click
         img.setOnClickListener((v) ->{
             Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
             if (takePictureIntent.resolveActivity(getPackageManager()) != null) {

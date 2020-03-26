@@ -30,6 +30,7 @@ public class MainActivity extends AppCompatActivity {
     public static String TAG = "Friend2";
 
     private static final int FRIEND_DETAIL = 123;
+    private static final int FRIEND_DETAIL_ADD = 124;
 
     ArrayList<BEFriend> friends;
 
@@ -80,11 +81,12 @@ public class MainActivity extends AppCompatActivity {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-        if(requestCode == FRIEND_DETAIL)
+        switch (requestCode)
         {
-            switch (resultCode)
+            case FRIEND_DETAIL:
             {
-                case RESULT_OK:
+                if(resultCode == RESULT_OK)
+                {
                     Bundle bundle = data.getExtras();
                     int position = bundle.getInt("position");
                     BEFriend friend = (BEFriend) data.getSerializableExtra("friend");
@@ -92,11 +94,22 @@ public class MainActivity extends AppCompatActivity {
                     friendDao.update(friend);
                     refreshListView();
                     break;
-                case RESULT_CANCELED:
-                    break;
+                }
             }
+            case FRIEND_DETAIL_ADD:
+            {
+                if(resultCode == RESULT_OK)
+                {
+                    BEFriend friend = (BEFriend) data.getSerializableExtra("friend");
+                    friend = friendDao.create(friend);
+                    friends.add(friend);
+                    refreshListView();
+                    break;
+                }
+            }
+            default:
+                break;
         }
-
     }
 
     private class FriendsAdapter extends ArrayAdapter<BEFriend>{
@@ -145,9 +158,17 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()){
+            case R.id.itAddFriend:
+                addNewFriend();
+                return true;
             default:
                 return super.onContextItemSelected(item);
         }
+    }
+
+    private void addNewFriend(){
+        Intent x = new Intent(this, DetailActivity.class);
+        startActivityForResult(x,FRIEND_DETAIL_ADD);
     }
 
 }
