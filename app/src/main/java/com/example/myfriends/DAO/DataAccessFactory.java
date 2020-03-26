@@ -1,7 +1,6 @@
-package com.example.myfriends;
+package com.example.myfriends.DAO;
 
 import android.content.Context;
-
 import com.example.myfriends.Model.BEFriend;
 
 public class DataAccessFactory {

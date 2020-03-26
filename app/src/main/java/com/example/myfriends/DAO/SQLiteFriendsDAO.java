@@ -1,4 +1,4 @@
-package com.example.myfriends;
+package com.example.myfriends.DAO;
 
 import android.content.Context;
 import android.database.Cursor;

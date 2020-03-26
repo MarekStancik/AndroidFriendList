@@ -1,4 +1,4 @@
-package com.example.myfriends;
+package com.example.myfriends.DAO;
 
 import java.util.ArrayList;
 import java.util.List;
