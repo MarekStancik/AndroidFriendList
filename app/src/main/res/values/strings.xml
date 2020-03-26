@@ -7,4 +7,6 @@
     <string name="addFriend">Add Friend</string>
     <string name="name">Name</string>
     <string name="location">Location</string>
+    <string name="ordering">Ordering</string>
+    <string name="viewAs">View as</string>
 </resources>

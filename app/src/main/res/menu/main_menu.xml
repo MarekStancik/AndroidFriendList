@@ -2,7 +2,7 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
     <group>
         <item
-            android:title="Ordering">
+            android:title="@string/ordering">
             <menu>
                 <item
                     android:id="@+id/itOrderAscDesc"
@@ -13,6 +13,19 @@
                 <item
                     android:id="@+id/itOrderLocation"
                     android:title="@string/location"/>
+            </menu>
+        </item>
+    </group>
+    <group>
+        <item
+            android:title="@string/viewAs">
+            <menu>
+                <item
+                    android:id="@+id/itViewMap"
+                    android:title="Map"/>
+                <item
+                    android:id="@+id/itViewList"
+                    android:title="List"/>
             </menu>
         </item>
     </group>
